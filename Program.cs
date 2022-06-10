@@ -64,6 +64,8 @@ repo.TestRepo(parameters, "School_GetList3");
 repo.TestRepo(parameters, "School_GetList4");
 repo.TestRepo(parameters, "School_GetList5");
 
+repo.TestRepo(parameters, "School_GetList", true);
+
 Console.WriteLine("");
 Console.WriteLine("");
 Console.WriteLine("End");

@@ -11,28 +11,34 @@ namespace SqlRawSpTestApp.Helper
 {
     public static class TestRepository
     {
-        public static void TestRepo(this SchoolRepository repo, List<IParameter> parameters, string command)
+        public static void TestRepo(this SchoolRepository repo, List<IParameter> parameters, string command, bool oldStyle = false)
         {
+            string old = oldStyle ? "old style" : string.Empty;
             try
             {
                 Console.WriteLine("");
                 Console.WriteLine("");
 
-                Console.WriteLine($"{command}");
+                Console.WriteLine($"{command} {old}");
                 Console.WriteLine("-------");
 
-                var result = repo.GetList(parameters, command);
+                List<School> result;
+
+                if (!oldStyle)
+                    result = repo.GetList(parameters, command);
+                else
+                    result = repo.GetListOldStyle(parameters, command);
 
                 foreach (School item in result)
                 {
                     Console.WriteLine($"{item.Id} - {item.Name}");
                 }
 
-                Console.WriteLine($"{command}: Success");
+                Console.WriteLine($"{command} {old}: Success");
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"{command}: {ex.Message}");
+                Console.WriteLine($"{command} {old}: {ex.Message}");
             }
 
             Console.WriteLine("");

@@ -37,6 +37,43 @@ namespace SqlRawSpTestApp.Repository
             return result;
         }
 
+        public List<School> GetListOldStyle(List<IParameter> filter, string command)
+        {
+            SqlConnection connection = new SqlConnection(_context.Database.GetConnectionString());
+            List<School> result = new();
+
+            using (connection)
+            {
+                List<SqlParameter> parameters = GetListParameters(filter);
+
+                using (SqlCommand cmd = new SqlCommand(command, connection))
+                {
+                    cmd.CommandType = CommandType.StoredProcedure;
+
+                    cmd.Parameters.AddWithValue("@IntWhereClauses", parameters[0].Value);
+                    cmd.Parameters[0].SqlDbType = SqlDbType.Structured;
+
+                    connection.Open();
+                    using (SqlDataReader reader = cmd.ExecuteReader())
+                    {
+                        if (reader.HasRows)
+                        {
+                            while (reader.Read())
+                            {
+                                result.Add(new School()
+                                {
+                                    Id = reader.GetInt32(0),
+                                    Name = reader.GetString(1)
+                                });
+                            }
+                        }
+                    }
+                }
+            }
+
+            return result;
+        }
+
         private List<SqlParameter> GetListParameters(List<IParameter> parameters)
         {
             List<SqlParameter> returnParams = new();
